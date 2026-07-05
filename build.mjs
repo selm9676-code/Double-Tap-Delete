@@ -10,7 +10,7 @@ const outdir = `dist/${PLUGIN_ID}`;
 mkdirSync(outdir, { recursive: true });
 
 await esbuild.build({
-  entryPoints: ["src/index.tsx"],
+  entryPoints: ["index.tsx"],
   bundle: true,
   outfile: `${outdir}/index.js`,
   format: "iife",
