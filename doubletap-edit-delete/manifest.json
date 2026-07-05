@@ -1,0 +1,12 @@
+{
+  "name": "Double Tap Edit/Delete",
+  "description": "Double tap your own message to instantly edit or delete it. Works in DMs, group chats, and servers.",
+  "authors": [
+    {
+      "name": "Evader",
+      "id": "0"
+    }
+  ],
+  "main": "index.js",
+  "hash": "1afeb914"
+}
