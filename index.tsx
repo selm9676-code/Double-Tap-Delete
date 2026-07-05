@@ -4,8 +4,9 @@ import { storage } from "@vendetta/plugin";
 import { showToast } from "@vendetta/ui/toasts";
 import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { logger } from "@vendetta";
+
 import { isDoubleTap } from "./doubleTap";
-import { getPermissions, deleteMessage, startEdit } from "./messageActions"; from "./lib/messageActions";
+import { getPermissions, deleteMessage, startEdit } from "./messageActions";
 import Settings from "./Settings";
 
 // ---- defaults -------------------------------------------------------------
