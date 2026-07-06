@@ -13,7 +13,8 @@ await esbuild.build({
   entryPoints: ["index.tsx"],
   bundle: true,
   outfile: `${outdir}/index.js`,
-  format: "iife",
+  format: "cjs",
+  platform: "node",
   target: "esnext",
   minify: true,
   // These are provided at runtime by the ShiggyCord/Bunny/Kettu loader —
