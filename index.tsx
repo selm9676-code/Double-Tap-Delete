@@ -2,7 +2,6 @@ import { findByProps, findByName } from "@vendetta/metro";
 import { before } from "@vendetta/patcher";
 import { storage } from "@vendetta/plugin";
 import { showToast } from "@vendetta/ui/toasts";
-import { showConfirmationAlert } from "@vendetta/ui/alerts";
 import { logger } from "@vendetta";
 
 import { isDoubleTap } from "./doubleTap";
@@ -15,6 +14,30 @@ storage.confirmDelete ??= true;
 storage.tapThresholdMs ??= 300;
 
 let unpatch: (() => void) | null = null;
+
+// Looked up lazily (only when actually needed) and guarded, since this is
+// the one UI helper whose exact module path can vary between loader
+// versions/forks. If it's missing, we just skip the popup and delete
+// directly instead of crashing the whole plugin on load.
+function confirmThenDelete(channelId: string, messageId: string) {
+  try {
+    const alerts = require("@vendetta/ui/alerts");
+    if (alerts?.showConfirmationAlert) {
+      alerts.showConfirmationAlert({
+        title: "Delete Message",
+        content: "This message will be permanently deleted.",
+        confirmText: "Delete",
+        confirmColor: "red",
+        cancelText: "Cancel",
+        onConfirm: () => deleteMessage(channelId, messageId),
+      });
+      return;
+    }
+  } catch (e) {
+    logger.error("[DoubleTapEditDelete] Confirmation dialog unavailable, deleting without one: " + e);
+  }
+  deleteMessage(channelId, messageId);
+}
 
 function handleDoubleTap(message: any, channel: any) {
   const { canEdit, canDelete } = getPermissions(message, channel);
@@ -35,14 +58,7 @@ function handleDoubleTap(message: any, channel: any) {
   }
 
   if (storage.confirmDelete) {
-    showConfirmationAlert({
-      title: "Delete Message",
-      content: "This message will be permanently deleted.",
-      confirmText: "Delete",
-      confirmColor: "red",
-      cancelText: "Cancel",
-      onConfirm: () => deleteMessage(channel.id, message.id),
-    });
+    confirmThenDelete(channel.id, message.id);
   } else {
     deleteMessage(channel.id, message.id);
   }
