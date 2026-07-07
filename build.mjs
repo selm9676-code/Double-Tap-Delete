@@ -2,8 +2,6 @@ import esbuild from "esbuild";
 import { createHash } from "node:crypto";
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 
-// This is the folder name that ends up in your plugin URL:
-// https://<user>.github.io/<repo>/doubletap-edit-delete
 const PLUGIN_ID = "doubletap-edit-delete";
 const outdir = `dist/${PLUGIN_ID}`;
 
@@ -17,8 +15,6 @@ await esbuild.build({
   platform: "node",
   target: "esnext",
   minify: true,
-  // These are provided at runtime by the ShiggyCord/Bunny/Kettu loader —
-  // do NOT bundle them, or the plugin will crash on load.
   external: ["@vendetta", "@vendetta/*", "react", "react-native"],
 });
 
@@ -35,5 +31,4 @@ const manifest = {
 };
 
 writeFileSync(`${outdir}/manifest.json`, JSON.stringify(manifest, null, 2));
-
 console.log(`Built ${PLUGIN_ID} -> ${outdir} (hash ${hash})`);
