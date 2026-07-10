@@ -13,7 +13,7 @@ await esbuild.build({
   outfile: `${outdir}/index.js`,
   format: "cjs",
   platform: "node",
-  target: "esnext",
+  target: "es2017",
   minify: true,
   external: ["@vendetta", "@vendetta/*", "react", "react-native"],
 });
