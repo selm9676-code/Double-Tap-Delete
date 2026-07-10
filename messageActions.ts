@@ -8,7 +8,9 @@ const UserStore = findByProps("getCurrentUser");
 const PermissionStore = findByProps("can", "getGuildPermissions");
 
 // MANAGE_MESSAGES permission bit (Discord permission flags are stable/public).
-const MANAGE_MESSAGES = 1n << 13n;
+// Kept as a plain Number (not BigInt) — 8192 is far below the safe-integer
+// limit, and avoiding BigInt entirely sidesteps engine-support questions.
+const MANAGE_MESSAGES = 8192;
 
 export interface Permissions {
   canEdit: boolean;
@@ -23,7 +25,7 @@ export function getPermissions(message: any, channel: any): Permissions {
   if (channel?.guild_id) {
     try {
       hasManageMessages = !!PermissionStore?.can?.(MANAGE_MESSAGES, channel);
-    } catch {
+    } catch (e) {
       hasManageMessages = false;
     }
   }
